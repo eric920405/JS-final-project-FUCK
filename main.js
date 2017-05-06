@@ -12,7 +12,7 @@ var ctx = canvas.getContext("2d");
 var cursor = {x:0,y:0};
 var isBuilding = false;
 
-function drawbg{
+function drawbg(){
 	ctx.drawImage(bgImg,0,0);
 	setInterval(draw,16);
 }
