@@ -14,10 +14,10 @@ var isBuilding = false;
 
 function drawbg(){
 	ctx.drawImage(bgImg,0,0);
+	ctx.drawImage(tbImg,576,416,64,64);
 	setInterval(draw,16);
 }
 function draw(){
 	ctx.drawImage(eyImg,enemy.x,enemy.y);
-	ctx.drawImage(tbImg,576,416,64,64);
 }
 setTimeout(drawbg,1000);
