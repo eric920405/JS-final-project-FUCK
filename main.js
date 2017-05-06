@@ -12,12 +12,15 @@ var ctx = canvas.getContext("2d");
 var cursor = {x:0,y:0};
 var isBuilding = false;
 
-function drawbg(){
+$("#game-canvas").mousemove(function(event){
+	cursor.x = event.offsetX;
+	cursor.y = event.offsetY;
+});
+
+function draw(){
 	ctx.drawImage(bgImg,0,0);
 	ctx.drawImage(tbImg,576,416,64,64);
-	setInterval(draw,16);
-}
-function draw(){
 	ctx.drawImage(eyImg,enemy.x,enemy.y);
+	ctx.drawImage(trImg,cursor.x,cursor.y);
 }
-setTimeout(drawbg,1000);
+setInterval(draw,16);
