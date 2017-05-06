@@ -20,3 +20,4 @@ function draw(){
 	ctx.drawImage(eyImg,enemy.x,enemy.y);
 	ctx.drawImage(tbImg,576,416,64,64);
 }
+setTimeout(drawbg,1000);
