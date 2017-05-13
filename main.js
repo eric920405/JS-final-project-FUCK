@@ -2,18 +2,30 @@ var bgImg = document.createElement("img");
 bgImg.src = "images/map.png";
 var eyImg = document.createElement("img");
 eyImg.src = "images/rukia.gif";
-var enemy = {x:96,y:448,};
+var enemy = {
+	x:96,
+	y:448,
+	speed:64,
+	direction:{
+		x:0,
+		y:-1
+	},
+	move:function(){
+		enemy.x = enemy.x + enemy.direction.x * enemy.speed/fps;
+		enemy.y = enemy.y + enemy.direction.y * enemy.speed/fps;
+}};
 var tbImg = document.createElement("img");
-tbImg.src = "images/tower-btn.png"
+tbImg.src = "images/tower-btn.png";
 var trImg = document.createElement("img");
 trImg.src = "images/tower.png";
 var canvas = document.getElementById("game-canvas");
 var ctx = canvas.getContext("2d");
 var cursor = {x:0,y:0};
 var isBuilding = false;
+var fps = 60;
 
 $("#game-canvas").click(function(){
-	if ((cursor.x > 576)  && (cursor.y > 416)){
+	if ((cursor.x >= 576)  && (cursor.y >= 416)){
 		if (isBuilding == true) {
 			isBuilding = false;
 		}else{
@@ -35,5 +47,6 @@ function draw(){
 	if (isBuilding == true) {
 		ctx.drawImage(trImg,cursor.x,cursor.y);
 	}
+	enemy.move();
 }
-setInterval(draw,16);
+setInterval(draw,1000/fps);
