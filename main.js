@@ -2,16 +2,15 @@ var bgImg = document.createElement("img");
 bgImg.src = "images/map2.png";
 var eyImg = document.createElement("img");
 eyImg.src = "images/rukia.gif";
-var enemy = {
-	x:96,
-	y:448,
-	speed:64,
-	pathDes:0,
-	direction:{
-		x:0,
-		y:-1
-	},
-	move:function(){
+var enemies = [];
+var clock = 0;
+function Enemy(){
+	this.x = 96;
+	this.y = 448;
+	this.direction = {x:0,y:-1};
+	this.speed = 64;
+	this.pathDes = 0;
+	this.move = function(){
 		if (isCollided(
 			enemyPath[this.pathDes].x,
 			enemyPath[this.pathDes].y,
@@ -26,7 +25,8 @@ var enemy = {
 			this.x = this.x + this.direction.x * this.speed / fps;
 			this.y = this.y + this.direction.y * this.speed / fps;
 		}
-}};
+	};
+}
 function isCollided (pointX,pointY,targetX,targetY,target){
 	if (pointX >= targetX
 		&& pointX <= targetX + target
@@ -66,6 +66,15 @@ var enemyPath = [
 	{x:544,y:96},
 	{/*none*/}
 ];
+var towers = [];
+function Tower(){
+	this.x = cursor.x;
+	this.y = cursor.y;
+}
+function addTower(){
+	var newTower = new Tower();
+	towers.push(newTower);
+}
 $("#game-canvas").click(function(){
 	if ((cursor.x >= 576)  && (cursor.y >= 416)){
 		if (isBuilding == true) {
@@ -75,6 +84,7 @@ $("#game-canvas").click(function(){
 		}
 	}else if (isBuilding == true){
 		isBuilding = false;
+		addTower();
 	}
 });
 $("#game-canvas").mousemove(function(event){
@@ -85,10 +95,20 @@ $("#game-canvas").mousemove(function(event){
 function draw(){
 	ctx.drawImage(bgImg,0,0);
 	ctx.drawImage(tbImg,576,416,64,64);
-	ctx.drawImage(eyImg,enemy.x,enemy.y);
 	if (isBuilding == true) {
 		ctx.drawImage(trImg,cursor.x,cursor.y);
 	}
-	enemy.move();
+	clock++;
+	if((clock % 80) == 0){
+		var newEnemy = new Enemy();
+		enemies.push(newEnemy);
+	}
+	for (var i = 0; i < towers.length; i++) {
+		ctx.drawImage(trImg,towers[i].x,towers[i].y);
+	}
+		for (var i = 0; i < enemies.length; i++) {
+		enemies[i].move();
+		ctx.drawImage(eyImg,enemies[i].x,enemies[i].y);
+	}
 }
 setInterval(draw,1000/fps);
