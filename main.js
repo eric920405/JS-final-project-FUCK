@@ -170,8 +170,12 @@ function draw(){
 		}
 	}
 	for (var i = 0; i < cannonballs.length; i++) {
-		cannonballs[i].move();
-		ctx.drawImage(cbImg,cannonballs[i].x,cannonballs[i].y,8,8);
+		if(cannonballs[i].y<0&&cannonballs[i].y>480){
+			cannonballs.splice(i,1);
+		}else{
+			cannonballs[i].move();
+			ctx.drawImage(cbImg,cannonballs[i].x,cannonballs[i].y,8,8);
+		}
 	}
 }
 setInterval(draw,1000/fps);
