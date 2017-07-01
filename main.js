@@ -9,7 +9,8 @@ var clock = 0;
 var cannonballs = [];
 function Cannonball(tower){
 	this.speed = 320;
-	this.damage = 5;
+	this.damage = 1;
+	this.hitted = false;
 	var aimedEnemy = enemies[tower.aimingEnemyId];
 	this.x = tower.x + 12;
 	this.y = tower.y + 12;
@@ -17,10 +18,25 @@ function Cannonball(tower){
 	this.move = function(){
 		this.x += this.direction.x * this.speed/fps;
 		this.y += this.direction.y * this.speed/fps;
+		for (var i = 0; i < enemies.length; i++) {
+			if(isCollided(
+				enemies[i].x+12,
+				enemies[i].y+12,
+				this.x,
+				this.y,
+				this.speed/fps)){
+				if (enemies[i].hp == this.damage) {
+					score += 10;
+				}
+				enemies[i].hp -= this.damage;
+				this.hitted = true;
+				break;
+			}
+		}
 	}
 }	
 function Enemy(){
-	this.hp = 1;
+	this.hp = 5;
 	this.x = 96;
 	this.y = 480;
 	this.direction = {x:0,y:-1};
@@ -67,6 +83,7 @@ function getUnitVector (srcX,srcY,targetX,targetY){
 	return unitVector;
 }
 var hp = 100;
+var score = 0;
 var tbImg = document.createElement("img");
 tbImg.src = "images/tower-btn.png";
 var trImg = document.createElement("img");
@@ -140,11 +157,13 @@ $("#game-canvas").mousemove(function(event){
 });
 
 function draw(){
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.drawImage(bgImg,0,0);
 	ctx.drawImage(tbImg,576,416,64,64);
 	ctx.font = "24px Microsoft JhengHei";
 	ctx.fillStyle  = "white";
 	ctx.fillText("HP:" + hp,5,32);
+	ctx.fillText("Score:" + score,5,64);
 	if (isBuilding == true) {
 		ctx.drawImage(trImg,cursor.x,cursor.y);
 	}
@@ -170,12 +189,20 @@ function draw(){
 		}
 	}
 	for (var i = 0; i < cannonballs.length; i++) {
-		if(cannonballs[i].y<0&&cannonballs[i].y>480){
+		if(cannonballs[i].y<0||cannonballs[i].y>480||cannonballs[i].x>640||cannonballs[i].x<0){
 			cannonballs.splice(i,1);
 		}else{
 			cannonballs[i].move();
 			ctx.drawImage(cbImg,cannonballs[i].x,cannonballs[i].y,8,8);
 		}
+		if (cannonballs[i].hitted) {
+			cannonballs.splice(i,1);
+		}
+	}
+	if (hp<=0) {
+		ctx.font = "64px Microsoft JhengHei";
+		ctx.fillText("GAME OVER",135,266);
+		clearInterval(intervalID);
 	}
 }
-setInterval(draw,1000/fps);
+var intervalID = setInterval(draw,1000/fps);
